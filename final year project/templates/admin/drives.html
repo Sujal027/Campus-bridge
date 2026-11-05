@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Placement drives{% endblock %}
+{% block content %}
+<h1>Placement drives</h1>
+<p>Create employer drives and manage their details.</p>
+<div class="columns">
+  <section class="panel scroll">
+    <h2>Current drives</h2>
+    <table>
+      <tr><th>Company / role</th><th>Date</th><th>Applicants</th><th>Status</th><th>Action</th></tr>
+      {% for d in drives %}
+      <tr>
+        <td>{{ d.company }}<small>{{ d.title }}</small></td>
+        <td>{{ d.drive_date }}</td>
+        <td>{{ d.applicants }}</td>
+        <td>{{ d.status }}</td>
+        <td>
+          <div class="inline">
+            <a class="button-link" href="{{ url_for('placement.edit_drive',drive_id=d.id) }}">Edit</a>
+            <form method="post" action="{{ url_for('placement.delete_drive',drive_id=d.id) }}" onsubmit="return confirm('Delete this placement drive? Drives with applications cannot be deleted.');">
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+              <button class="danger-button" type="submit">Delete</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5">No drives created.</td></tr>
+      {% endfor %}
+    </table>
+  </section>
+
+  <section class="panel">
+    {% if edit_drive %}
+    <h2>Edit placement drive</h2>
+    <form method="post" class="formgrid one" action="{{ url_for('placement.edit_drive',drive_id=edit_drive.id) }}">
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+      <label>Company<input name="company" value="{{ edit_drive.company }}" required></label>
+      <label>Role title<input name="title" value="{{ edit_drive.title }}" required></label>
+      <label>Description<textarea name="description">{{ edit_drive.description }}</textarea></label>
+      <label>CTC / stipend<input name="ctc" value="{{ edit_drive.ctc }}"></label>
+      <label>Eligible branches (comma separated)<input name="branches" value="{{ edit_drive.branches|replace(';', ', ') }}"></label>
+      <label>Minimum CGPA<input type="number" name="min_cgpa" step=".1" min="0" max="10" value="{{ edit_drive.mincgpa }}" required></label>
+      <label>Maximum backlogs<input type="number" name="max_backlogs" min="0" value="{{ edit_drive.maxbacklogs }}" required></label>
+      <label>Deadline<input type="date" name="deadline" value="{{ edit_drive.deadline }}" required></label>
+      <label>Drive date<input type="date" name="drive_date" value="{{ edit_drive.drive_date }}" required></label>
+      <label>Venue<input name="venue" value="{{ edit_drive.venue }}"></label>
+      <label>Status<select name="status">{% for s in ['Open','Draft','Closed'] %}<option {{ 'selected' if s==edit_drive.status }}>{{ s }}</option>{% endfor %}</select></label>
+      <div class="inline"><button>Save changes</button><a href="{{ url_for('placement.drives') }}">Cancel</a></div>
+    </form>
+    {% else %}
+    <h2>Create drive</h2>
+    <form method="post" class="formgrid one" action="{{ url_for('placement.drives') }}">
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+      <label>Company<input name="company" required></label>
+      <label>Role title<input name="title" required></label>
+      <label>Description<textarea name="description"></textarea></label>
+      <label>CTC / stipend<input name="ctc"></label>
+      <label>Eligible branches (comma separated)<input name="branches"></label>
+      <label>Minimum CGPA<input type="number" name="min_cgpa" step=".1" min="0" max="10" value="0"></label>
+      <label>Maximum backlogs<input type="number" name="max_backlogs" min="0" value="0"></label>
+      <label>Deadline<input type="date" name="deadline" required></label>
+      <label>Drive date<input type="date" name="drive_date" required></label>
+      <label>Venue<input name="venue"></label>
+      <label>Status<select name="status"><option>Open</option><option>Draft</option></select></label>
+      <button>Create placement drive</button>
+    </form>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

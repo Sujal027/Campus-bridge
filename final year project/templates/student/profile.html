@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+<h1>Student profile</h1>
+<p>Contact details are used for placement updates. Email delivery requires the college SMTP settings.</p>
+<form method="post" class="panel formgrid">
+  <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+  <label>Name<input name="name" value="{{ student.name }}" required></label>
+  <label>Enrollment number<input value="{{ student.enrollment or '' }}" disabled></label>
+  <label>Email address<input type="email" name="email" value="{{ student.email }}" required></label>
+  <label>Phone number<input type="tel" name="phone" value="{{ student.phone or '' }}" placeholder="+91 98765 43210"></label>
+  <label>Branch<input name="branch" value="{{ student.branch }}" required></label>
+  <label>Graduation year<input type="number" name="graduation_year" value="{{ student.year }}" required></label>
+  <label>CGPA<input type="number" step=".01" min="0" max="10" name="cgpa" value="{{ student.cgpa }}" required></label>
+  <label>Backlogs<input type="number" min="0" name="backlogs" value="{{ student.backlogs }}" required></label>
+  <label class="checkbox-label"><input type="checkbox" name="email_notifications" value="1" {% if student.email_notifications %}checked{% endif %}> Email me when a new placement notification arrives</label>
+  <button>Save profile</button>
+</form>
+{% endblock %}

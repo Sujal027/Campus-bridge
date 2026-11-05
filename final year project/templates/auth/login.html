@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Sign in{% endblock %}
+{% block public_content %}
+<div class="login">
+  <section><b>CampusBridge</b><h1>Make every opportunity count.</h1><p>A single place for campus placements, applications, and updates.</p></section>
+  <form method="post" class="panel loginform">
+    <h2>Sign in</h2>
+    {% for kind,message in get_flashed_messages(with_categories=true) %}<p class="flash {{ kind }}">{{ message }}</p>{% endfor %}
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+    <label>Email<input type="email" name="email" required></label>
+    <label>Password<input type="password" name="password" required></label>
+    <button>Sign in</button>
+    <p>Student: student@college.edu / demo123<br>Admin: admin@college.edu / demo123</p>
+    <p>New student? <a href="{{ url_for('auth.register') }}">Create an account</a></p>
+  </form>
+</div>
+{% endblock %}

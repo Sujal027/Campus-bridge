@@ -1,0 +1,1 @@
+<div class="scroll"><table><tr><th>Company / role</th><th>Drive date</th><th>Applied</th><th>Status</th></tr>{% for a in applications %}<tr><td>{{ a.company }}<small>{{ a.title }}</small></td><td>{{ a.drive_date }}</td><td>{{ a.applied[:10] }}</td><td>{{ a.status }}</td></tr>{% else %}<tr><td colspan="4">No applications yet.</td></tr>{% endfor %}</table></div>
